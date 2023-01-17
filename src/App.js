@@ -1,24 +1,44 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import './App.css';
+import Login from "./Components/Login"
+import Register from './Components/Register';
+import Main from './Components/Main'
 
-function App() {
+const App = () => {
+  const [user, setUser] = useState({id: null, username: '', password: ''})
+  
+
+  // const navigate = useNavigate()
+
+  // function for login
+  const handleLogin = (data) => {
+    axios.post('https://floating-escarpment-86191.herokuapp.com/api/user/login', data).then((res) => {
+      setUser(res.data)
+    })
+    .catch(() => alert("Wrong information. Please Try again"))
+  }
+
+  // function for registration
+  const handleRegister = (data) => {
+    axios.post('https://floating-escarpment-86191.herokuapp.com/api/user/register', data).then((res) => {
+      setUser(res.data)
+    })
+  }
+
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className='text-center w-100 mx-auto my-5'>
+      <Routes>
+        <Route exact path="/" element={<Login handleLogin={handleLogin}/>} />
+        <Route path="/register" element={<Register handleRegister={handleRegister}/>} />
+        <Route path='/main' element={<Main user={user}/>} />
+
+      </Routes>
+    
+    </main>
   );
 }
 
